@@ -1,111 +1,5 @@
-<!-- التصميم (CSS) وهيكل المشغل (HTML) والسكربت كاملاً -->
-<style>
-:root {
-  --bg: #080711;
-  --purple: #8b5cf6;
-  --purple-dark: #6d35d5;
-  --white: #f8f7ff;
-  --muted: #aaa3bd;
-  --line: #ffffff20;
-}
-* { box-sizing: border-box; }
-html, body {
-  margin: 0; padding: 0; width: 100%; height: 100%; min-height: 100%;
-  overflow: hidden; background: var(--bg); color: var(--white); font-family: Tajawal, Arial, sans-serif;
-  direction: ltr;
-}
-body { display: block; position: fixed; inset: 0; }
-.player {
-  position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh;
-  max-width: none; max-height: none; aspect-ratio: auto; overflow: hidden; background: #000; isolation: isolate;
-}
-.player.cursor-hidden { cursor: none !important; }
-video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
-.shade {
-  position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(180deg, #0009, transparent 25%, transparent 60%, #000b);
-}
-.topbar, .controls {
-  position: absolute; z-index: 5; left: 0; right: 0;
-  display: flex; align-items: center; justify-content: space-between; padding: 20px;
-  direction: ltr;
-}
-.topbar { top: 0; }
-.controls { bottom: 0; }
-.brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; cursor: pointer; direction: rtl; }
-.brand-link:hover .brand-name { color: #a78bfa; }
-.brand-mark {
-  width: 39px; height: 39px; border-radius: 12px; display: grid; place-items: center;
-  color: #fff; background: linear-gradient(145deg, #a78bfa, #6128c7); box-shadow: 0 5px 25px #7138d866;
-}
-.brand-mark svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.brand-name { font-size: 17px; font-weight: 900; transition: color 0.2s ease; text-align: right; }
-.brand-sub { font-size: 9px; color: #c2b8da; letter-spacing: 1.5px; direction: ltr; text-align: right; }
-.live { background: #ed3150; color: white; padding: 6px 11px; border-radius: 7px; font-size: 11px; font-weight: 900; }
-.control-group { display: flex; align-items: center; gap: 9px; direction: ltr; }
-.icon-btn {
-  width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px;
-  border: 1px solid var(--line); background: #171326bb; color: white; cursor: pointer; backdrop-filter: blur(12px);
-}
-.icon-btn:hover { background: var(--purple-dark); border-color: #a78bfa; }
-.icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.main-play { width: 42px; height: 42px; border-radius: 12px; }
-.volume-wrap { display: flex; align-items: center; gap: 8px; }
-.volume { width: 75px; accent-color: #a78bfa; }
-.status {
-  position: absolute; z-index: 4; inset: 0; display: flex; flex-direction: column;
-  justify-content: center; align-items: center; gap: 12px; text-align: center; background: #0005; pointer-events: none; padding: 20px;
-  direction: rtl;
-}
-.status[hidden] { display: none; }
-.spinner {
-  width: 45px; height: 45px; border: 3px solid #ffffff25; border-top-color: #a78bfa;
-  border-radius: 50%; animation: spin .8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.status-text { font-weight: 800; font-size: 15px; }
-.status-sub { color: var(--muted); font-size: 12px; }
-.menu {
-  position: absolute; z-index: 10; bottom: 80px; right: 20px; width: 220px;
-  padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: #151123f2; backdrop-filter: blur(20px);
-  direction: rtl;
-  text-align: right;
-}
-.menu[hidden] { display: none; }
-.menu-title { padding: 8px; color: #c4a6ff; font-weight: 800; border-bottom: 1px solid var(--line); text-align: right; }
-.menu button {
-  width: 100%; padding: 11px 12px; margin-top: 4px; border: 0; border-radius: 8px;
-  background: transparent; color: white; font: 700 13px Tajawal; text-align: right; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-  direction: rtl;
-}
-.menu button:hover { background: #7540ce35; }
-.menu button.active-quality { background: var(--purple-dark); color: #fff; }
-.menu button.active-quality::after {
-  content: '✓';
-  font-weight: 900;
-  color: #a78bfa;
-}
-.progress {
-  position: absolute; z-index: 6; bottom: 76px; left: 20px; right: 20px;
-  height: 5px; background: #ffffff35; cursor: pointer; direction: ltr; border-radius: 3px;
-}
-.progress span { display: block; height: 100%; width: 100%; background: #a78bfa; border-radius: 3px; pointer-events: none; }
-.toast {
-  position: absolute; z-index: 15; top: 20%; left: 50%; transform: translateX(-50%);
-  background: #171326; border: 1px solid #8b5cf6; border-radius: 9px; padding: 9px 15px; font-size: 12px; display: none;
-  direction: rtl;
-}
-.toast.show { display: block; }
-.player.controls-hidden .topbar,
-.player.controls-hidden .controls,
-.player.controls-hidden .progress,
-.player.controls-hidden .menu,
-.player.controls-hidden .shade { opacity: 0; visibility: hidden; pointer-events: none; }
-.player .topbar, .player .controls, .player .progress, .player .menu, .player .shade { transition: opacity .25s ease, visibility .25s ease; }
-.player:fullscreen { width: 100%; height: 100%; max-width: none; max-height: none; background: #000; }
-</style>
-
-<!-- هيكل المشغل (HTML) -->
+// إنشاء هيكل المشغل وتثبيته في الصفحة تلقائياً
+const playerContainerHTML = `
 <div class="player" id="player">
   <video id="video" playsinline="playsinline" webkit-playsinline="webkit-playsinline"></video>
   <div class="shade"></div>
@@ -194,9 +88,12 @@ video { display: block; width: 100%; height: 100%; object-fit: cover; background
     <div id="qualityOptions"></div>
   </div>
 </div>
+`;
 
-<!-- السكربت التشغيلي -->
-<script>
+// حقن الهيكل تلقائياً في جسم الصفحة بمجرد تحميل السكربت
+document.body.insertAdjacentHTML('beforeend', playerContainerHTML);
+
+// منطق التشغيل والتحكم للمشغل
 (() => {
   const $ = id => document.getElementById(id);
   const video = $('video');
@@ -426,4 +323,3 @@ video { display: block; width: 100%; height: 100%; object-fit: cover; background
   syncPlay();
   init();
 })();
-</script>
