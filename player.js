@@ -1,4 +1,3 @@
-// إنشاء هيكل المشغل وتثبيته في الصفحة تلقائياً
 const playerContainerHTML = `
 <div class="player" id="player">
   <video id="video" playsinline="playsinline" webkit-playsinline="webkit-playsinline"></video>
